@@ -1,3 +1,9 @@
+cpbotha LaTeXTools fork
+=======================
+This is a fork of the original LaTeXTools. Changes so far:
+* Goto anything @ (symbol list - Ctrl-R) shows hierarchy in LaTeX documents by indenting the various symbols. With # you can filter out all sectioning commands, and with . all of the labels.
+* Added documentation for configuring your main tex file, in projects with multiple tex files, in your sublime-project file.
+
 LaTeX Plugin for Sublime Text 2
 ===============================
 
@@ -109,7 +115,15 @@ The ST2 Build command takes care of the following:
 
 **Multi-file documents** are supported as follows. If the first line in the current file consists of the text `%!TEX root = <master file name>`, then tex & friends are invoked on the specified master file, instead of the current one. Note: the only file that gets saved automatically is the current one. Also, the master file name **must** have a `.tex` extension, or it won't be recognized.
 
-There is also support for project files; this is to be documented.
+You can also configure this using project files. This is more flexible, as you can have different tex roots for the same tex files, for example when including the same tex into different documents. To do this, load up the files you want to edit, then do Project | Save Project As. Now edit the resultant .sublime-project file and add configure the tex root in the settings section:
+
+    {
+      "settings":
+      {
+        "TEXroot": "your_main_file.tex"
+      }
+    }
+
 
 ### Toggling window focus following a build ###
 
