@@ -2,7 +2,9 @@ cpbotha LaTeXTools fork
 =======================
 This is a fork of the original LaTeXTools. Changes so far:
 * Goto anything @ (symbol list - Ctrl-R) shows hierarchy in LaTeX documents by indenting the various symbols. With # you can filter out all sectioning commands, and with . all of the labels.
-* Added documentation for configuring your main tex file, in projects with multiple tex files, in your sublime-project file.
+* Added missing documentation for configuring your main tex file, in projects with multiple tex files, in your sublime-project file. See the [Multi-file documents](#Multi-file documents) section below.
+
+[@cpbotha](http://twitter.com/cpbotha)
 
 LaTeX Plugin for Sublime Text 2
 ===============================
@@ -113,9 +115,11 @@ The ST2 Build command takes care of the following:
 * It parses the tex log file and lists all errors and warnings in an output panel at the bottom of the ST2 window: click on any error/warning to jump to the corresponding line in the text, or use the ST2-standard Next Error/Previous Error commands.
 * It invokes the PDF viewer for your platform and performs a forward search: that is, it displays the PDF page where the text corresponding to the current cursor position is located.
 
-**Multi-file documents** are supported as follows. If the first line in the current file consists of the text `%!TEX root = <master file name>`, then tex & friends are invoked on the specified master file, instead of the current one. Note: the only file that gets saved automatically is the current one. Also, the master file name **must** have a `.tex` extension, or it won't be recognized.
+### Multi-file documents
 
-You can also configure this using project files. This is more flexible, as you can have different tex roots for the same tex files, for example when including the same tex into different documents. To do this, load up the files you want to edit, then do Project | Save Project As. Now edit the resultant .sublime-project file and add configure the tex root in the settings section:
+These are supported as follows. If the first line in the current file consists of the text `%!TEX root = <master file name>`, then tex & friends are invoked on the specified master file, instead of the current one. Note: the only file that gets saved automatically is the current one. Also, the master file name **must** have a `.tex` extension, or it won't be recognized.
+
+You can also configure this using project files. This is more flexible, as you can have different tex roots for the same tex files, for example when including the same tex into different documents, by configuring different project files. To configure your tex root using a project file, load up the files you want to edit, then do Project | Save Project As. Now edit the resultant .sublime-project file and add configure the tex root in the settings section:
 
     {
       "settings":
