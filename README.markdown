@@ -128,7 +128,7 @@ The ST2 Build command takes care of the following:
 
 These are supported as follows. If the first line in the current file consists of the text `%!TEX root = <master file name>`, then tex & friends are invoked on the specified master file, instead of the current one. Note: the only file that gets saved automatically is the current one. Also, the master file name **must** have a `.tex` extension, or it won't be recognized.
 
-You can also configure this using project files. This is more flexible, as you can have different tex roots for the same tex files, for example when including the same tex into different documents, by configuring different project files. To configure your tex root using a project file, load up the files you want to edit, then do Project | Save Project As. Now edit the resultant .sublime-project file and add configure the tex root in the settings section:
+You can also configure this using project files. This is more flexible, as you can have different tex roots for the same tex files, for example when including the same tex into different documents, by configuring different project files. To configure your tex root using a project file, load up the files you want to edit, then do Project | Save Project As. Now edit the resultant .sublime-project file and add configure the tex root in the settings section. In the original LaTeXTools, this has to be an absolute path. In the cpbotha fork, LaTeXTools will try to handle it as a path relative to the currently edited tex file, but absolute paths should also work.
 
     {
       "settings":
