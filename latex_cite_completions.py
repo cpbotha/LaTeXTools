@@ -290,7 +290,9 @@ class LatexCiteCommand(sublime_plugin.TextCommand):
 
         # Otherwise, see if we have a preformatted \cite{}
         else:
-            rex = re.compile(r"([^{}]*)\{?([a-zX*]*?)etic\\")
+            # we also search for the case where the user has multiple refs
+            # separated by commas. (cpbotha)
+            rex = re.compile(r"([^{},]*)(,?[^{}]*)\{?([a-zX*]*?)etic\\")
             expr = match(rex, line)
 
             if not expr:
@@ -298,11 +300,13 @@ class LatexCiteCommand(sublime_plugin.TextCommand):
 
             preformatted = True
             post_brace = ""
-            prefix, fancy_cite = rex.match(expr).groups()
+            # \citeFC{existing,prefix}
+            prefix, existing_keys, fancy_cite = rex.match(expr).groups()
             if prefix:
                 prefix = prefix[::-1]
             else:
                 prefix = ""
+
             if fancy_cite:
                 fancy_cite = fancy_cite[::-1]
                 if fancy_cite[-1] == "X":
@@ -310,7 +314,6 @@ class LatexCiteCommand(sublime_plugin.TextCommand):
             else:
                 fancy_cite = ""
             print prefix, fancy_cite
-
         # Reverse back expr
         expr = expr[::-1]
 
@@ -403,8 +406,15 @@ class LatexCiteCommand(sublime_plugin.TextCommand):
             if i<0:
                 return
 
-            last_brace = "}" if not preformatted else ""
-            cite = "\\cite" + fancy_cite + "{" + completions[i][0] + last_brace
+            if preformatted:
+                last_brace = ""
+                ek = existing_keys[::-1]
+
+            else:
+                last_brace = "}"
+                ek = ""
+
+            cite = "\\cite" + fancy_cite + "{" + ek + completions[i][0] + last_brace
 
             print "selected %s:%s by %s" % completions[i] 
             # Replace cite expression with citation
