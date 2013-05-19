@@ -4,6 +4,15 @@ This is a fork of the original LaTeXTools. Changes so far:
 * Goto anything @ (symbol list - Ctrl-R) shows hierarchy in LaTeX documents by indenting the various symbols. With # you can filter out all sectioning commands, and with . all of the labels.
 * Added missing documentation for configuring your main tex file, in projects with multiple tex files, in your sublime-project file. See the [Multi-file documents](#multi-file-documents) section below.
 
+Installing this fork
+--------------------
+
+To install this version using [Package Control](http://wbond.net/sublime_packages/package_control), start the command pallette (Ctrl-Shift-P), select "Package Control: Add Repository" and then enter
+
+    https://github.com/cpbotha/LaTeXTools
+
+Now select "Package Control: Install Package" if you didn't have LaTeXTools installed, or "Package Control: Upgrade Package" if you did.
+
 [@cpbotha](http://twitter.com/cpbotha)
 
 LaTeX Plugin for Sublime Text 2
