@@ -2,7 +2,7 @@ cpbotha LaTeXTools fork
 =======================
 This is a fork of the original LaTeXTools. Changes so far:
 * Goto anything @ (symbol list - Ctrl-R) shows hierarchy in LaTeX documents by indenting the various symbols. With # you can filter out all sectioning commands, and with . all of the labels.
-* Added missing documentation for configuring your main tex file, in projects with multiple tex files, in your sublime-project file. See the [Multi-file documents](#Multi-file documents) section below.
+* Added missing documentation for configuring your main tex file, in projects with multiple tex files, in your sublime-project file. See the [Multi-file documents](#multi-file-documents) section below.
 
 [@cpbotha](http://twitter.com/cpbotha)
 
