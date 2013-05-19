@@ -3,6 +3,8 @@ cpbotha LaTeXTools fork
 This is a fork of the original LaTeXTools. Changes so far:
 * Goto anything @ (symbol list - Ctrl-R) shows hierarchy in LaTeX documents by indenting the various symbols. With # you can filter out all sectioning commands, and with . all of the labels.
 * Added missing documentation for configuring your main tex file, in projects with multiple tex files, in your sublime-project file. See the [Multi-file documents](#multi-file-documents) section below.
+* Modified TEXroot specification in project file so path relative to tex file can be specified, instead of just absolute.
+* bibtex citation key completion now works for multiple citation keys in a single cite statement. In other words, you can now do "\cite{completed_key1,new" and then press Ctrl-l,<SPACE>, and it will correctly complete the "new" key.
 
 Installing this fork
 --------------------
