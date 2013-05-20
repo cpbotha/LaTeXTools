@@ -43,7 +43,7 @@ class View_pdfCommand(sublime_plugin.WindowCommand):
 			ev_sync_exec = os.path.join(script_path, 'evince_sync') # so we get inverse search
 			# Get python binary if set in preferences:
 			py_binary = prefs_lin["python2"] or 'python'
-			sb_binary = prefs_lin["sublime"] or 'sublime-text'
+			sb_binary = prefs_lin["sublime"] or 'sublime_text'
 			viewercmd = ['sh', ev_sync_exec, py_binary, sb_binary]
 		else:
 			sublime.error_message("Platform as yet unsupported. Sorry!")
