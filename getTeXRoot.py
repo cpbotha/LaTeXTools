@@ -8,12 +8,12 @@ import os.path, re
 
 def get_tex_root(view):
 	# (cpbotha modified)
-	# this used to just get the TEXroot verbatim from the project file.
-	# it would have been great to have this spec relative to the location
-	# of the project file. however, that doesn't seem to be available, so
-	# we're going to go for relative to the tex file that's being edited.
-	# this is optional however: if you specify an absolute path this will
-	# also work.
+	# this used to just get the TEXroot verbatim from the project file. it
+	# would have been great to have this spec relative to the location of the
+	# project file. however, that doesn't seem to be available in sublime 2
+	# (it will be in sublime 3 as sublime.Window.project_file_name()), so we're
+	# going to go for relative to the tex file that's being edited. this is
+	# optional however: if you specify an absolute path this will also work.
 
 	# first get directory containing the tex file currenty being edited
 	cur_file_dir = os.path.abspath(os.path.dirname(view.file_name()))
