@@ -16,19 +16,23 @@ def get_tex_root(view):
 	# optional however: if you specify an absolute path this will also work.
 
 	# first get directory containing the tex file currenty being edited
-	cur_file_dir = os.path.abspath(os.path.dirname(view.file_name()))
-	# get the spec from the project settings
+
+	# view.file_name() returns the absolute path name of the file being edited
+	cur_file_dir = os.path.dirname(view.file_name())
+	# get the spec from the project settings (can return None)
 	texrootrel = view.settings().get('TEXroot')
-	# mash it up with the dir, then get its absolute version
-	# if the user has specified an absolute path, that should still take 
-	# precedence
-	texroot = os.path.abspath(os.path.join(cur_file_dir, texrootrel))
 
-	if os.path.isfile(texroot):
-		print "Main file defined in project settings : " + texroot
-		return texroot
+	if texrootrel is not None:
+		# mash it up with the dir, then get its absolute version
+		# if the user has specified an absolute path, that should still take 
+		# precedence
+		texroot = os.path.abspath(os.path.join(cur_file_dir, texrootrel))
 
+		if os.path.isfile(texroot):
+			print "Main file defined in project settings : " + texroot
+			return texroot
 
+	# couldn't find it in the project, falling back to % !TEXroot = ... syntax
 	texFile = view.file_name()
 	for line in open(texFile, "rU").readlines():
 		if not line.startswith('%'):
