@@ -174,6 +174,15 @@ class LatexCiteCompletions(sublime_plugin.EventListener):
         print repr(bib_files)
          
         completions = []
+        
+        # cpbotha FIXME: 
+        # in bib files where entries have been commented out by simply 
+        # removing the @ (common practice) this reports a broken bib file 
+        # because according to these regexes, there are more titles than 
+        # keywords.
+        # it would be correct (and robust) to have a single regex that 
+        # captures @keyword ... title = in one go.
+
         kp = re.compile(r'@[^\{]+\{(.+),')
         # new and improved regex
         # we must have "title" then "=", possibly with spaces
