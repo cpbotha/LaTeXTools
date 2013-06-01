@@ -175,14 +175,6 @@ class LatexCiteCompletions(sublime_plugin.EventListener):
          
         completions = []
         
-        # cpbotha FIXME: 
-        # in bib files where entries have been commented out by simply 
-        # removing the @ (common practice) this reports a broken bib file 
-        # because according to these regexes, there are more titles than 
-        # keywords.
-        # it would be correct (and robust) to have a single regex that 
-        # captures @keyword ... title = in one go.
-
         kp = re.compile(r'@[^\{]+\{(.+),')
         # new and improved regex
         # we must have "title" then "=", possibly with spaces
@@ -347,6 +339,16 @@ class LatexCiteCommand(sublime_plugin.TextCommand):
         print repr(bib_files)
         
         completions = []
+
+        # cpbotha FIXME: 
+        # in bib files where entries have been commented out by simply 
+        # removing the @ (common practice) this reports a broken bib file 
+        # because according to these regexes, there are more titles than 
+        # keywords.
+        # it would be correct (and robust) to have a single regex that 
+        # captures @keyword ... title = in one go.
+
+
         # cpbotha: there may be spaces between { and keyword
         kp = re.compile(r'@[^\{]+\{\s*(.+),')
         # new and improved regex
@@ -378,8 +380,11 @@ class LatexCiteCommand(sublime_plugin.TextCommand):
                 bib = bibf.readlines()
                 bibf.close()
             print "%s has %s lines" % (repr(bibfname), len(bib))
-            
+
             # note Unicode trickery
+
+            # cpbotha FIXME: this breaks completely with:
+            # @string{lala = ''} which is a valid construct
             keywords = [kp.search(line).group(1).decode('ascii','ignore') for line in bib if line[0] == '@']
             titles = [tp.search(line).group(1).decode('ascii','ignore') for line in bib if tp.search(line)]
             authors = [ap.search(line).group(1).decode('ascii','ignore') for line in bib if ap.search(line)]
