@@ -340,14 +340,11 @@ class LatexCiteCommand(sublime_plugin.TextCommand):
         
         completions = []
 
-        # cpbotha FIXME: 
-        # in bib files where entries have been commented out by simply 
-        # removing the @ (common practice) this reports a broken bib file 
-        # because according to these regexes, there are more titles than 
-        # keywords.
-        # it would be correct (and robust) to have a single regex that 
-        # captures @keyword ... title = in one go.
-
+        # cpbotha:
+        # note that capturing nested structures with regexp is not done:
+        # http://stackoverflow.com/a/3558943/532513
+        # either we'll have to write a parser, or stick to regexps and
+        # live with the issues.
 
         # cpbotha: there may be spaces between { and keyword
         kp = re.compile(r'@[^\{]+\{\s*(.+),')
@@ -360,16 +357,8 @@ class LatexCiteCommand(sublime_plugin.TextCommand):
         tp = re.compile(r'\btitle\s*=\s*(?:\{+|")\s*(.+)', re.IGNORECASE)  # note no comma!
         # Tentatively do the same for author
         ap = re.compile(r'\bauthor\s*=\s*(?:\{+|")\s*(.+)', re.IGNORECASE)
-        kp2 = re.compile(r'([^\t]+)\t*')
 
         for bibfname in bib_files:
-            # # NO LONGER NEEDED: see above
-            # if bibfname[-4:] != ".bib":
-            #     bibfname = bibfname + ".bib"
-            # texfiledir = os.path.dirname(view.file_name())
-            # # fix from Tobias Schmidt to allow for absolute paths
-            # bibfname = os.path.normpath(os.path.join(texfiledir, bibfname))
-            # print repr(bibfname) 
             try:
                 bibf = open(bibfname)
             except IOError:
@@ -381,27 +370,68 @@ class LatexCiteCommand(sublime_plugin.TextCommand):
                 bibf.close()
             print "%s has %s lines" % (repr(bibfname), len(bib))
 
-            # note Unicode trickery
 
-            # cpbotha FIXME: temporary workaround as this breaks completely
-            # with: @string{lala = ''} which is a valid construct
-            # when I implement the multiline @ + title regexp, this will 
-            # be solved correctly
-            keywords = [kp.search(line).group(1).decode('ascii','ignore')
-                        for line in bib
-                        if line[0] == '@' and not line.lower().startswith('@string')]
-            titles = [tp.search(line).group(1).decode('ascii','ignore') for line in bib if tp.search(line)]
-            authors = [ap.search(line).group(1).decode('ascii','ignore') for line in bib if ap.search(line)]
+            #################################################################
+            # new and improved cpbotha bibtex parser begins here
+            # * old parser used separate regexps for keywords, authors and 
+            #   titles. would break when entries were commented out by 
+            #   removing @ (common practice), and in cases where record 
+            #   had no title (user mistake)
+            # * old parser would also break with @string{lala = 'value'} 
+            #   constructs.
+            # * new parser is (slightly) more intelligent about catching 
+            #   complete record, and hence does not get tripped up by above 
+            #   problems.
+            # * todo: support for multiline titles and authors (old parser 
+            #   also did not support this)
 
-#            print zip(keywords,titles,authors)
+            keywords = []
+            titles = []
+            authors = []
+            curkeyword = ""
+            curtitle = ""
+            curauthors = ""
 
-            if len(keywords) != len(titles):
-                print "Bibliography " + repr(bibfname) + " is broken!"
-                return
+            def add_record():
+                # new citekey, store previous one if we have all desired 
+                # fields
+                if curkeyword and curtitle and curauthors:
+                    keywords.append(curkeyword)
+                    titles.append(curtitle)
+                    authors.append(curauthors)
 
-            # if len(keywords) != len(authors):
-            #     print "Bibliography " + bibfname + " is broken (authors)!"
-            #     return
+
+            for line in bib:
+                mo = kp.search(line)
+                if mo:
+                    add_record()
+
+                    # reset
+                    curkeyword = mo.group(1).decode('ascii','ignore')
+                    curtitle = ""
+                    curauthors = ""
+
+                else:
+                    # current line is not a new @type{citekey,
+                    # so let's see if it's a title or an authors line
+
+                    # if we don't have a title yet, see
+                    if not curtitle:
+                        mo = tp.search(line)
+                        if mo:
+                            curtitle = mo.group(1).decode('ascii','ignore')
+
+                    if not curauthors:
+                        mo = ap.search(line)
+                        if mo:
+                            curauthors = mo.group(1).decode('ascii','ignore')
+
+            # if we have a valid keyword, title and authors
+            # add it to the lists
+            add_record()
+
+            # new cpbotha parser ends here
+            #################################################################
 
             print "Found %d total bib entries" % (len(keywords),)
 
