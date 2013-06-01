@@ -383,9 +383,13 @@ class LatexCiteCommand(sublime_plugin.TextCommand):
 
             # note Unicode trickery
 
-            # cpbotha FIXME: this breaks completely with:
-            # @string{lala = ''} which is a valid construct
-            keywords = [kp.search(line).group(1).decode('ascii','ignore') for line in bib if line[0] == '@']
+            # cpbotha FIXME: temporary workaround as this breaks completely
+            # with: @string{lala = ''} which is a valid construct
+            # when I implement the multiline @ + title regexp, this will 
+            # be solved correctly
+            keywords = [kp.search(line).group(1).decode('ascii','ignore')
+                        for line in bib
+                        if line[0] == '@' and not line.lower().startswith('@string')]
             titles = [tp.search(line).group(1).decode('ascii','ignore') for line in bib if tp.search(line)]
             authors = [ap.search(line).group(1).decode('ascii','ignore') for line in bib if ap.search(line)]
 
