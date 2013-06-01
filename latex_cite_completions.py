@@ -69,7 +69,7 @@ def find_bib_files(rootdir, src, bibfiles):
 # There is also another problem: * is also a word boundary :-( So, use e.g. citeX if
 # what you want is \cite*{...}; the plugin handles the substitution
 
-class LatexCiteCompletions(sublime_plugin.EventListener):
+class LatexCiteCompletionsDEPRECATED(sublime_plugin.EventListener):
 
     def on_query_completions(self, view, prefix, locations):
         # Only trigger within LaTeX
