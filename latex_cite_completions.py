@@ -347,7 +347,8 @@ class LatexCiteCommand(sublime_plugin.TextCommand):
         print repr(bib_files)
         
         completions = []
-        kp = re.compile(r'@[^\{]+\{(.+),')
+        # cpbotha: there may be spaces between { and keyword
+        kp = re.compile(r'@[^\{]+\{\s*(.+),')
         # new and improved regex
         # we must have "title" then "=", possibly with spaces
         # then either {, maybe repeated twice, or "
@@ -377,6 +378,7 @@ class LatexCiteCommand(sublime_plugin.TextCommand):
                 bib = bibf.readlines()
                 bibf.close()
             print "%s has %s lines" % (repr(bibfname), len(bib))
+            
             # note Unicode trickery
             keywords = [kp.search(line).group(1).decode('ascii','ignore') for line in bib if line[0] == '@']
             titles = [tp.search(line).group(1).decode('ascii','ignore') for line in bib if tp.search(line)]
