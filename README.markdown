@@ -7,6 +7,7 @@ This is a fork of the original LaTeXTools. Changes so far:
 * bibtex citation key completion now works for multiple citation keys in a single cite statement. In other words, you can now do "\cite{completed_key1,new" and then press Ctrl-l,<SPACE>, and it will correctly complete the "new" key.
 * Much improved bibtex parsing for a number of often-occurring cases that broke the old parsing logic.
 * Fixed evince PDF viewer inverse searching bug on Linux. (LaTeXTools was trying sublime-text instead of sublime_text)
+* Added support for okular as PDF viewer, and made this the default as it's more robust. You can select which viewer you prefer by configuring `pdf_viewer`, one of the `linux` settings in `LaTeXTools Preferences.sublime-settings`. Make sure that you have the configured viewer installed, LaTeXTools does not check.
 
 Installing this fork
 --------------------

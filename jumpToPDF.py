@@ -88,36 +88,49 @@ class jump_to_pdfCommand(sublime_plugin.TextCommand):
 		
 		elif 'linux' in plat: # for some reason, I get 'linux2' from sys.platform
 			print "Linux!"
-			
-			# the required scripts are in the 'evince' subdir
-			ev_path = os.path.join(sublime.packages_path(), 'LaTeXTools', 'evince')
-			ev_fwd_exec = os.path.join(ev_path, 'evince_forward_search')
-			ev_sync_exec = os.path.join(ev_path, 'evince_sync') # for inverse search!
-			#print ev_fwd_exec, ev_sync_exec
-			
-			# Run evince if either it's not running, or if focus PDF was toggled
-			# Sadly ST2 has Python <2.7, so no check_output:
-			running_apps = subprocess.Popen(['ps', 'xw'], stdout=subprocess.PIPE).communicate()[0]
-			# If there are non-ascii chars in the output just captured, we will fail.
-			# Thus, decode using the 'ignore' option to simply drop them---we don't need them
-			running_apps = running_apps.decode(sublime_plugin.sys.getdefaultencoding(), 'ignore')
-			
-			# Run scripts through sh because the script files will lose their exec bit on github
 
-			# Get python binary if set:
-			py_binary = prefs_lin["python2"] or 'python'
-			sb_binary = prefs_lin["sublime"] or 'sublime-text'
-			# How long we should wait after launching sh before syncing
-			sync_wait = prefs_lin["sync_wait"] or 1.0
+			if prefs_lin["pdf_viewer"] != "evince":
+				# src:<linenum><sourcefile> is a special "named destination" 
+				# that uses synctex to look up the place in the PDF corresponding 
+				# to that line in the source file (a source reference iow)
+				subprocess.Popen(["okular", "--unique", "%s#src:%d%s" % (pdffile, line, srcfile)])
+				# to make inverse searching (shift-click on PDF) work in okular,
+				# go to Settings | Configure Okular | Editor -- then select "Custom 
+				# Text Editor" and enter "sublime_text %f:%l:%c" (without the 
+				# quotes of course)
 
-			evince_running = ("evince " + pdffile in running_apps)
-			if (not keep_focus) or (not evince_running):
-				print "(Re)launching evince"
-				subprocess.Popen(['sh', ev_sync_exec, py_binary, sb_binary, pdffile], cwd=ev_path)
-				print "launched evince_sync"
-				if not evince_running: # Don't wait if we have already shown the PDF
-					time.sleep(sync_wait)
-			if forward_sync:
-				subprocess.Popen([py_binary, ev_fwd_exec, pdffile, str(line), srcfile])
+			else:
+
+				# the required scripts are in the 'evince' subdir
+				ev_path = os.path.join(sublime.packages_path(), 'LaTeXTools', 'evince')
+				ev_fwd_exec = os.path.join(ev_path, 'evince_forward_search')
+				ev_sync_exec = os.path.join(ev_path, 'evince_sync') # for inverse search!
+				#print ev_fwd_exec, ev_sync_exec
+				
+				# Run evince if either it's not running, or if focus PDF was toggled
+				# Sadly ST2 has Python <2.7, so no check_output:
+				running_apps = subprocess.Popen(['ps', 'xw'], stdout=subprocess.PIPE).communicate()[0]
+				# If there are non-ascii chars in the output just captured, we will fail.
+				# Thus, decode using the 'ignore' option to simply drop them---we don't need them
+				running_apps = running_apps.decode(sublime_plugin.sys.getdefaultencoding(), 'ignore')
+				
+				# Run scripts through sh because the script files will lose their exec bit on github
+
+				# Get python binary if set:
+				py_binary = prefs_lin["python2"] or 'python'
+				sb_binary = prefs_lin["sublime"] or 'sublime-text'
+				# How long we should wait after launching sh before syncing
+				sync_wait = prefs_lin["sync_wait"] or 1.0
+
+				evince_running = ("evince " + pdffile in running_apps)
+				if (not keep_focus) or (not evince_running):
+					print "(Re)launching evince"
+					subprocess.Popen(['sh', ev_sync_exec, py_binary, sb_binary, pdffile], cwd=ev_path)
+					print "launched evince_sync"
+					if not evince_running: # Don't wait if we have already shown the PDF
+						time.sleep(sync_wait)
+				if forward_sync:
+					subprocess.Popen([py_binary, ev_fwd_exec, pdffile, str(line), srcfile])
+
 		else: # ???
 			pass
