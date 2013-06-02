@@ -1,13 +1,29 @@
 cpbotha LaTeXTools fork
 =======================
 This is a fork of the original LaTeXTools. Changes so far:
-* Goto anything @ (symbol list - Ctrl-R) shows hierarchy in LaTeX documents by indenting the various symbols. With - you can filter out all sectioning commands, and with . all of the labels.
-* Added missing documentation for configuring your main tex file, in projects with multiple tex files, in your sublime-project file. See the [Multi-file documents](#multi-file-documents) section below.
-* Modified TEXroot specification in project file so path relative to tex file can be specified, instead of just absolute.
-* bibtex citation key completion now works for multiple citation keys in a single cite statement. In other words, you can now do "\cite{completed_key1,new" and then press Ctrl-l,<SPACE>, and it will correctly complete the "new" key.
-* Much improved bibtex parsing for a number of often-occurring cases that broke the old parsing logic.
-* Fixed evince PDF viewer inverse searching bug on Linux. (LaTeXTools was trying sublime-text instead of sublime_text)
-* Added support for okular as PDF viewer, and made this the default as it's more robust. You can select which viewer you prefer by configuring `pdf_viewer`, one of the `linux` settings in `LaTeXTools Preferences.sublime-settings`. Make sure that you have the configured viewer installed, LaTeXTools does not check.
+* Goto anything @ (symbol list - Ctrl-R) shows hierarchy in LaTeX
+  documents by indenting the various symbols. With - you can
+  filter out all sectioning commands, and with . all of the
+  labels.
+* Added missing documentation for configuring your main tex file,
+  in projects with multiple tex files, in your sublime-project
+  file. See the [Multi-file documents](#multi-file-documents)
+  section below.
+* Modified TEXroot specification in project file so path relative
+  to tex file can be specified, instead of just absolute.
+* bibtex citation key completion now works for multiple citation
+  keys in a single cite statement. In other words, you can now do
+  "\cite{completed_key1,new" and then press Ctrl-l,<SPACE>, and it
+  will correctly complete the "new" key.
+* Much improved bibtex parsing for a number of often-occurring
+  cases that broke the old parsing logic.
+* Fixed evince PDF viewer inverse searching bug on Linux.
+  (LaTeXTools was trying sublime-text instead of sublime_text)
+* Added support for okular as PDF viewer, and made this the
+  default as it's more robust. Make sure that you have the
+  configured viewer installed, LaTeXTools does not check. For more
+  information, including how to configure your Okular, see the
+  [Linux][#linux] section below.
 
 Installing this fork
 --------------------
@@ -55,7 +71,7 @@ I encourage you to install Package Control anyway, because it's awesome, and it 
 
 Third, follow the OS-specific instructions below.
 
-<br>
+### OSX
 
 On **OSX**, you need to be running the MacTeX distribution (which is pretty much the only one available on the Mac anyway) and the Skim PDF previewer. Just download and install these in the usual way. I have tested MacTeX versions 2010 and 2011, both 32 and 64 bits; these work fine. On the other hand, MacTeX 2008 does *not* seem to work out of the box (compilation fails), so please upgrade. If you don't want to install the entire MacTeX distro, which is pretty big, BasicTeX will also work (of course, as long as the latex packages you need are included). **However**, you need to explicitly add the `latexmk` utility, which is not included by default: from the Terminal, type `sudo tlmgr install latexmk` (you will need to provide your password, assuming you are Administrator on your machine).
 
@@ -68,7 +84,7 @@ To configure inverse search, open the Preferences dialog of the Skim app, select
 
 Note: in case you have created a symlink to Sublime Text somewhere in your path, you can of course use that, too in the Command field. The above will work in any case though, and does *not* require you to create a symlink or mess with the Terminal in any way!
 
-<br>
+### Windows
 
 On **Windows**, both MikTeX and TeXlive are supported, but TeXLive support is currently *better*. Also, you must be running a current (>=1.4) version of the Sumatra PDF previewer. Install these as usual; then, add the SumatraPDF directory to your PATH (this requirement will be removed at some point). 
 
@@ -89,13 +105,32 @@ If instead you use TeXlive, comment out the lines between the comments `*** BEGI
 TeXlive has one main advantage over MikTeX: it supports file names and paths with spaces. Furthermore, it is easier to change the compilation engine from the default, `pdflatex`, to e.g. `xelatex`: see below for details.
 
 
-<br>
+### Linux
 
-**Linux** support is coming along nicely. You need to install TeXlive; if you are on Ubuntu, note that `apt-get install texlive` will get you a working but incomplete setup. In particular, it will *not* bring in `latexmk`, which is essential to LaTeXTools. You need to install it via `apt-get install latexmk`. If on the other hand you choose to install the TeXlive distro from TUG, `latexmk` comes with it, so you don't need to do anything else.
+**Linux** support is coming along nicely. You need to install
+TeXlive; if you are on Ubuntu, note that `apt-get install texlive`
+will get you a working but incomplete setup. In particular, it
+will *not* bring in `latexmk`, which is essential to LaTeXTools.
+You need to install it via `apt-get install latexmk`. If on the
+other hand you choose to install the TeXlive distro from TUG,
+`latexmk` comes with it, so you don't need to do anything else.
 
-Only the Evince PDF viewer is supported; it's installed by default on Ubuntu or, more generally, any distro that provides the Gnome desktop, and you don't need to configure anything. Backward and forward search Work For Me (TM). Hopefully they will work for you, too, but let me know if this is not the case.
+In this cpbotha fork of LaTeXTools, support for both okular and
+evince is available.
 
-Note: I already have patches to support Okular. Indeed, Okular is very easy to support, as it provides a sane command-line interface; Evince insists on using DBus, which requires considerable gyrations (luckily, it was relatively easy to adapt solutions already existing for other editors to ST2). What is harder is supporting *both* Evince and Okular. This would need a revamp of the building-related facilites of the plugin, basically supporting user settings to select a particular viewer. But the incentive to add such support is very low as far as other platforms are concerned: only SumatraPDF supports forward/inverse search on Windows, and Skim is the easiest-to-control and most powerful/complete PDF viewer on OS X that does. Bottom line: multiple viewer support is probably not coming in the near future. Sorry!
+Okular is the default solution in this fork, because it is the
+most robust (no system Python with dbus required). To configure
+inverse searching in Okular (i.e. shift-click on the PDF to jump
+back to the corresponding line in the LaTeX source), go to
+Settings | Configure Okular | Editor, then select "Custom Text
+Editor" and enter 'sublime_text %f:%l:%c'.
+
+The evince PDF viewer is installed by default on Ubuntu or, more
+generally, any distro that provides the Gnome desktop. If you want
+to use evince, change the `pdf_viewer` setting under `linux` to
+`evince`. Backward and forward search usually work. Hopefully they
+will work for you, too, but let me know if this is not the case.
+
 
 
 New-Style Keybindings
