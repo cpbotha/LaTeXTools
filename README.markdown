@@ -23,7 +23,7 @@ This is a fork of the original LaTeXTools. Changes so far:
   default as it's more robust. Make sure that you have the
   configured viewer installed, LaTeXTools does not check. For more
   information, including how to configure your Okular, see the
-  [Linux][#linux] section below.
+  [Linux](#linux) section below.
 
 Installing this fork
 --------------------
