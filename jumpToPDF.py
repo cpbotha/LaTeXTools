@@ -93,7 +93,8 @@ class jump_to_pdfCommand(sublime_plugin.TextCommand):
 				# src:<linenum><sourcefile> is a special "named destination" 
 				# that uses synctex to look up the place in the PDF corresponding 
 				# to that line in the source file (a source reference iow)
-				subprocess.Popen(["okular", "--unique", "%s#src:%d%s" % (pdffile, line, srcfile)])
+				subprocess.Popen(["okular", "--unique", "%s#src:%d%s" % \
+					(pdffile, line, srcfile)])
 				# to make inverse searching (shift-click on PDF) work in okular,
 				# go to Settings | Configure Okular | Editor -- then select "Custom 
 				# Text Editor" and enter "sublime_text %f:%l:%c" (without the 

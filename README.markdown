@@ -123,7 +123,7 @@ most robust (no system Python with dbus required). To configure
 inverse searching in Okular (i.e. shift-click on the PDF to jump
 back to the corresponding line in the LaTeX source), go to
 Settings | Configure Okular | Editor, then select "Custom Text
-Editor" and enter 'sublime_text %f:%l:%c'.
+Editor" and enter '/full/path/to/sublime_text %f:%l:%c'.
 
 The evince PDF viewer is installed by default on Ubuntu or, more
 generally, any distro that provides the Gnome desktop. If you want
